@@ -18,13 +18,3 @@ def expe_AL(nbits,para):
          B=itembasedDCF.disOpt(5,1,trainMat, IDX, nbits, para[i], B0,D,X,5)
          ndcg=evaluate.NDCG_cal(B,D,testMat,5)
 	 print ndcg
-    # return ndcg
-
-#def auto_expt(nbits,para):
-#    para=np.array([0.0001, 0.001, 0.01, 0.1, 1, 10, 100])
-#    ndcg=[]
- #   for i in range(len(para)):
- #       result=expe_AL(nbits, para[i])
-#	ndcg.extend(result)
- #   return ndcg
-#

@@ -16,8 +16,8 @@ def train_test(arrays, test_size=0.2):
 #        np.random.seed(0)
 #        mask_test=np.random.rand(arrays[i]) <= test_size
         arr=np.arange(arrays[i])
-	np.random.shuffle(arr)
-	mask_test=arr < arrays[i]*test_size
+        np.random.shuffle(arr)
+        mask_test=arr < arrays[i]*test_size
         testidx.extend(mask_test)
         mask_train=~mask_test
         trainidx.extend(mask_train)

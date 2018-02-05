@@ -36,7 +36,8 @@ def mf_als(R,K, steps, beta):
 
 #        it.append(step)
 #       err.append(numpy.sqrt(numpy.sum(pow(numpy.array(R - X * Y.T), 2)) / (M * N)))
-
+#    np.savetxt('user_mf.csv',X,delimiter = ',')
+#    np.savetxt('item_mf.csv',Y,delimiter = ',')
     return X,Y
 
 
