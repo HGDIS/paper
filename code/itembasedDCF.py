@@ -1,80 +1,62 @@
 from compiler.ast import flatten
 import DCD
 from numpy import *
+import numpy as np
 from scipy import sparse
 from scipy import linalg
 import copy
 
-#read dataMat form the dataSet
-#input: ratings matrix
-#output: dataMat itemnum,usernum
-def loadDataSet(fileName):
-    fr=open(fileName)
-    rowArr=[]
-    colArr=[]
-    valArr=[]
-    for line in fr.readlines():
-       curLine=line.strip().split('::')
-       rowArr.append(int(curLine[0])-1)
-       colArr.append(int(curLine[1])-1)
-       valArr.append(int(curLine[2]))
-    usernum=max(rowArr)  
-    itemnum=max(colArr)  
-    dataMat=sparse.coo_matrix((valArr,(colArr,rowArr)),shape=(itemnum+1,usernum+1))
-    dataMat=dataMat.toarray()
-    return dataMat,usernum,itemnum
-
 #apply pca to get low dimensial feature vect of item
 def pca(dataMat,nbits):
-     meansVals=mean(dataMat,axis=0)         
-     meanRemoved=dataMat-meansVals
-     covMat=cov(meanRemoved,rowvar=0)         
-     eigVals,eigVects=linalg.eig(mat(covMat))
-     eigVects=eigVects.real
-     eigValInd=argsort(eigVals)
-     eigValInd=eigValInd[:-(nbits+1):-1]
-     redEigVects=eigVects[:,eigValInd]
-     lowDataMat=dot(meanRemoved,redEigVects)
-     return lowDataMat
+    meansVals=np.mean(dataMat,axis=0)         
+    meanRemoved=dataMat-meansVals
+    covMat=np.cov(meanRemoved,rowvar=0)         
+    eigVals,eigVects=linalg.eig(np.mat(covMat))
+    eigVects=eigVects.real
+    eigValInd=np.argsort(eigVals)
+    eigValInd=eigValInd[:-(nbits+1):-1]
+    redEigVects=eigVects[:,eigValInd]
+    lowDataMat=np.dot(meanRemoved,redEigVects)
+    return lowDataMat
  
 #sgn:if i>0,i=1,else i=-1
 def sgn(dataMat):
- 	m,n=shape(dataMat)
- 	for i in range(m):
- 		for j in range(n):
- 			if dataMat[i,j]>=0:
- 			    dataMat[i,j]=1.0
- 			else:
- 			    dataMat[i,j]=-1.0
- 	return dataMat
+    m,n=np.shape(dataMat)
+    for i in range(m):
+ 		  for j in range(n):
+ 			   if dataMat[i,j]>=0:
+ 			       dataMat[i,j]=1.0
+ 			   else:
+ 			       dataMat[i,j]=-1.0
+    return dataMat
  
 #apply ITQ to get item binary codes
 def ITQ(feaMat,nbits): 
-     rotMat=random.rand(nbits,nbits)
-     rotMat=mat(rotMat)
-     U,Sigma,VT=linalg.svd(rotMat)
-     R=U[:,0:nbits]
-     for i in range(51):
-          UX=dot(feaMat,R)
-          UX=sgn(UX)
-          C=dot(UX.T,feaMat)
-          UB,Sigma1,UA=linalg.svd(C)
-          UB=UB.T
-          R=dot(UA.T,UB)
-     return UX.T,R
+    rotMat=np.random.rand(nbits,nbits)
+    rotMat=np.mat(rotMat)
+    U,Sigma,VT=linalg.svd(rotMat)
+    R=U[:,0:nbits]
+    for i in range(51):
+        UX=np.dot(feaMat,R)
+        UX=sgn(UX)
+        C=np.dot(UX.T,feaMat)
+        UB,Sigma1,UA=linalg.svd(C)
+        UB=UB.T
+        R=np.dot(UA.T,UB)
+    return UX.T,R
  
 def normalize(v):
- 	norm=linalg.norm(v)
- 	if norm==0:
- 	    return v
- 	return v/norm
+    norm=linalg.norm(v)
+    if norm==0:
+ 	     return v
+    return v/norm
  
 def myMGS(U,K): #K:nbits
- 	m,n=shape(U)
- 	U=column_stack((U,mat(np.zeros([m,K-n]))))
-        for i in range(n,K):
- 		v=mat(random.rand(m,1))
- 		v=v-mean(v)
+    m,n=np.shape(U)
+    U=np.column_stack((U,np.mat(np.zeros([m,K-n]))))
+    for i in range(n,K):
+     		v=np.mat(np.random.rand(m,1))
+        v=v-np.mean(v)
  		for j in range(i+1):
  			v=v-float(U[:,j].T*v)*U[:,j]
  		v=normalize(v)
