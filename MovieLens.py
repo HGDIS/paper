@@ -9,7 +9,7 @@ import pandas as pd
 import numpy as np
 from scipy import sparse
 
-def train_test(arrays, test_size=0.2):
+def train_test(arrays, test_size=0.5):
     trainidx=[]
     testidx=[]
     for i in range(len(arrays)):

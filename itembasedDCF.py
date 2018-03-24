@@ -166,11 +166,3 @@ def disOpt(maxS, minS, S, IDX, nbits, alpha, B, D, X,maxItr2):
 	else:
 	    it+=1
     return B
-
-#if __name__=="__main__":
- #   dataM,u,i=loadDataSet('ratings.dat')
-  #  itemFeat=pca(dataM,8)
-   # D,R=ITQ(itemFeat,8)
-    #IDX=nonzero(dataM.T)
-    #B,X=parDinit(dataM.T,8,IDX,5,1,0.001,D,50)
-    # print B

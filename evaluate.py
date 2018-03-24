@@ -17,12 +17,10 @@ def haming_distance(s1,s2):
     return ham_dist
     
 def dot_distance(s1,s2):
-    s1=np.array(s1)
-    s2=np.array(s2)
-    dot_dist=np.dot(s1,s2)
+    dot_dist=np.dot(s1.T,s2)[0][0]
     return dot_dist
     
-def NDCG_cal(U, V, testMat,k,dist_method):
+def NDCG_cal(U, V, testMat,k):
     m,n=np.shape(U)
     NDCG=0.0
     for i in range(n):
@@ -36,7 +34,7 @@ def NDCG_cal(U, V, testMat,k,dist_method):
 #计算DCG            
         disti=[]
         for j in range(len(testi[0])):
-            dist=dist_method(U[:,i], V[:,testi[0][j]])
+            dist=dot_distance(U[:,i], V[:,testi[0][j]])
             disti.extend(dist)
         s=pd.Series(disti, index=testi[0])
         s.sort()
